@@ -1,0 +1,38 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Tomorrow:wght@300;400&display=swap');
+
+#pageHeader {
+    min-height: 40%;
+    color: white;
+    background-color: rgb(40,20,20);
+    font-family: 'Tomorrow', sans-serif;
+    padding: 40px;
+}
+
+#title-box {
+    margin: auto;
+}
+#title-box img {
+    height: 100%;
+    width: auto;
+    max-height: 100px !important;
+    float: right;
+    transform: scale(135%);
+    filter: brightness(110%);
+}
+
+@media (min-width: 768px) {
+    #sidebar {
+        overflow-y: hidden;
+        width: 16em;
+        border-right: 1px solid lightgray;
+    }
+    #sidebar .nav {
+        min-height: calc(100vh - 80px - 7.5rem);
+    }
+}
+
+.nav-link:hover {
+    background-color: lavender;
+    transition: background-color 0.3s;
+}
