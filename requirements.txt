@@ -1,3 +1,7 @@
+# For webserver
 flask
+python-dotenv
+
+# For parsers
 astropy
 openpyxl

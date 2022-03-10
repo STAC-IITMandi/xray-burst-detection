@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block head_additions %} 
+<script type="application/javascript" src="/static/upload.js" defer></script>
+{% endblock %}
+
+{% block content %}
+    <div class="h-100 d-flex align-items-center position-relative px-4" id="uploadContainer">
+        <div class="mx-auto">
+            <form method="POST" enctype="multipart/form-data" action="/analysis">
+                <label for="formFile" class="form-label h3 mt-4 mb-2">Select a data file to analyse</label>
+                <div class="my-3">
+                    <input class="form-control" type="file" name="formFile" id="formFile" required/>
+                    <div id="detectedFileFormat" class="x-form-instructions text-black my-3 d-none">
+                        Detected File Format : <span id="fileFormatLabel"></span>
+                        <input type="hidden" id="fileTypeHint" name="fileTypeHint" value=""/>
+                    </div>
+                    <ul class="my-2 list-unstyled text-muted formInstructions">
+                        <strong> Note : </strong>
+                        <div class="mx-3">
+                            <li>One file of size upto 200MB is allowed.
+                                You can use the file input to browse, or drag and drop a file here.</li>
+                            <li>Files in FITS, plain text (CSV/TSV like, HTML/LaTeX tables), or Excel formats can be parsed.
+                                Please refer to the user guide for details.</li>
+                        </div>
+                    </ul>
+                </div>
+                <div class="my-2"><details class="my-3">
+                    <summary>Additional Settings</summary>
+                    <p class="formInstructions py-2">Configure how to look for and parse the lightcurve (time series) data in your uploaded file.
+                        <br/> These settings are explained in detail in the User Guide.</p>
+                    <div class="row mb-2">
+                        <div class="col-md-4"><label for="fMeta_tableName" class="col-form-label">Table/Sheet Name</label></div>
+                        <div class="col-md-8"><input type="text" name="fMeta_tableName" class="form-control-sm" value="RATE"/></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4"><label for="fMeta_timeSerName" class="col-form-label">Time Value Column Name</label></div>
+                        <div class="col-md-8"><input type="text" name="fMeta_timeSerName" class="form-control-sm" value="TIME"/></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4"><label for="fMeta_fluxSerName" class="col-form-label">Flux Value Column Name</label></div>
+                        <div class="col-md-8"><input type="text" name="fMeta_fluxSerName" class="form-control-sm" value="RATE"/></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4"><label for="fMeta_timeUnit" class="col-form-label">Running Time Unit</label></div>
+                        <div class="col-md-8">
+                            <input type="number" name="fMeta_timeUnit" class="form-control-sm" value="1" min="0.001" step="0.001"/>
+                            <span class="col-form-label">seconds</span>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4"><label for="fMeta_timeEpoch" class="col-form-label">Time Epoch (UTC)</label></div>
+                        <div class="col-md-8">
+                            <input type="datetime-local" name="fMeta_timeEpoch" class="form-control-sm" value="2017-01-01T00:00:00"/>
+                        </div>
+                    </div>
+                    <div class="row my-4">
+                        <div class="col-4"><!--empty--></div>
+                        <button type="reset" id="submitBtn" class="col-4 btn btn-outline-warning">Reset</button>
+                        <div class="col-4"><!--empty--></div>
+                    </div>
+                </details></div>
+                <div class="row my-4">
+                    <div class="col-4"><!--empty--></div>
+                    <button type="submit" id="submitBtn" class="col-4 btn btn-secondary">Upload</button>
+                    <div class="col-4"><!--empty--></div>
+                </div>
+            </form>
+        </div>
+        <div id="dragDropDisplay" class="w-100 h-100 mx-0 my-0 position-absolute d-flex align-items-center d-none">
+            <div class="mx-auto">
+                <span class="display-1 text-white"><i class="bi bi-upload"></i></span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

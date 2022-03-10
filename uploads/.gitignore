@@ -1,0 +1,3 @@
+# Ignore everything here, except this file (keep the empty folder in git)
+*
+!.gitignore

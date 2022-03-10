@@ -21,7 +21,7 @@
     filter: brightness(110%);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 576px) {
     #sidebar {
         overflow-y: hidden;
         width: 16em;
@@ -35,4 +35,25 @@
 .nav-link:hover {
     background-color: lavender;
     transition: background-color 0.3s;
+}
+
+.formInstructions {
+    font-size: 90%;
+    line-height: 160%;
+}
+
+#dragDropDisplay {
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: rgba(245, 245, 245, 0.8);
+    text-shadow: 0px 0px 10px grey;
+    /* transition: display 0.5s; */
+}
+#contentDiv * {
+    pointer-events: none;
+}
+
+details .form-control-sm {
+    border: 1px solid #ced4da;
 }
