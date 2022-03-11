@@ -2,6 +2,7 @@
 var finput = document.getElementById('formFile');
 var formatDiv = document.getElementById('detectedFileFormat');
 var formatSpan = document.getElementById('fileFormatLabel');
+var formatHint = document.getElementById('fileTypeHint');
 const _maxFileMegaBytes = 200;
 var contentDiv = document.getElementById('uploadContainer');
 var dddisp = document.getElementById('dragDropDisplay');
@@ -22,14 +23,16 @@ function allText(string) {
 function inspectFile(string) {
     if (string.slice(0,30) === 'SIMPLE  =                    T') {
         formatSpan.innerHTML = `<span class="badge bg-success">FITS</span>`;
-    } else if (string.slice(0,8) === '\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1') {
-        formatSpan.innerHTML = `<span class="badge bg-success">XLS</span>`;
+        formatHint.value = "fits";
     } else if (string.slice(0,4) === '\x50\x4B\x03\x04') {
-        formatSpan.innerHTML = `<span class="badge bg-success">XLSX / ZIP</span>`;
+        formatSpan.innerHTML = `<span class="badge bg-success">XLSX</span>`;
+        formatHint.value = "xlsx";
     } else if (allText(string.slice(0,500))) {
         formatSpan.innerHTML = `<span class="badge bg-warning">ASCII Text</span>`;
+        formatHint.value = "txt";
     } else {
         formatSpan.innerHTML = `<span class="badge bg-danger">Unrecognised</span>`;
+        formatHint.value = "";
     }
 }
 

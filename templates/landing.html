@@ -34,17 +34,17 @@
                         <div class="col-md-8"><input type="text" name="fMeta_tableName" class="form-control-sm" value="RATE"/></div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-md-4"><label for="fMeta_timeSerName" class="col-form-label">Time Value Column Name</label></div>
-                        <div class="col-md-8"><input type="text" name="fMeta_timeSerName" class="form-control-sm" value="TIME"/></div>
+                        <div class="col-md-4"><label for="fMeta_timeSerName" class="col-form-label">Time Value Column Name<span class="text-danger">*</span></label></div>
+                        <div class="col-md-8"><input type="text" name="fMeta_timeSerName" class="form-control-sm" value="TIME" required/></div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-md-4"><label for="fMeta_fluxSerName" class="col-form-label">Flux Value Column Name</label></div>
-                        <div class="col-md-8"><input type="text" name="fMeta_fluxSerName" class="form-control-sm" value="RATE"/></div>
+                        <div class="col-md-4"><label for="fMeta_fluxSerName" class="col-form-label">Flux Value Column Name<span class="text-danger">*</span></label></div>
+                        <div class="col-md-8"><input type="text" name="fMeta_fluxSerName" class="form-control-sm" value="RATE" required/></div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-md-4"><label for="fMeta_timeUnit" class="col-form-label">Running Time Unit</label></div>
+                        <div class="col-md-4"><label for="fMeta_timeUnit" class="col-form-label">Running Time Unit<span class="text-danger">*</span></label></div>
                         <div class="col-md-8">
-                            <input type="number" name="fMeta_timeUnit" class="form-control-sm" value="1" min="0.001" step="0.001"/>
+                            <input type="number" name="fMeta_timeUnit" class="form-control-sm" value="1" min="0.001" step="0.001" required/>
                             <span class="col-form-label">seconds</span>
                         </div>
                     </div>
@@ -53,6 +53,10 @@
                         <div class="col-md-8">
                             <input type="datetime-local" name="fMeta_timeEpoch" class="form-control-sm" value="2017-01-01T00:00:00"/>
                         </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4"><label for="fMeta_asciiDelim" class="col-form-label">ASCII table delimiter</label></div>
+                        <div class="col-md-8"><input type="text" name="fMeta_asciiDelim" class="form-control-sm" value=""/></div>
                     </div>
                     <div class="row my-4">
                         <div class="col-4"><!--empty--></div>
