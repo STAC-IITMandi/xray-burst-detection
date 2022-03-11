@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block head_additions %} 
+<script>
+    const _uploadID = "{{ id }}";
+    var _queryURI = `/data/{{ id }}`;
+    console.info("Data Location : ", _queryURI);
+</script>
+<script type="application/javascript" src="/static/visualise.js" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="h-100 py-6 px-4">
+    <div class="py-4"><!-- Empty --></div>
+    <div class="mx-auto">
+        <dl class="row">
+            <dt class="col-sm-2 my-2">Filename</dt>
+            <dd class="col-sm-10 my-2">{{ filename }}</dd>
+            <dt class="col-sm-2 my-2">Upload ID</dt>
+            <dd class="col-sm-10 my-2">{{ id }}</dd>
+        </dl>
+    </div>
+    <div class="my-5 mx-auto">
+        <h3 class="my-2">Receiving processed data...</h3>
+        <div class="d-flex justify-content-center">
+            <div class="spinner-grow text-primary mx-1" style="animation-delay: 0.0s;" role="status">
+                <span class="visually-hidden">Loading...</span></div>
+            <div class="spinner-grow text-primary mx-1" style="animation-delay: 0.1s;" role="status">
+                <span class="visually-hidden">Loading...</span></div>
+            <div class="spinner-grow text-primary mx-1" style="animation-delay: 0.2s;" role="status">
+                <span class="visually-hidden">Loading...</span></div>
+        </large>
+    </div>
+</div>
+{% endblock %}

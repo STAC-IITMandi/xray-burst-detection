@@ -1,12 +1,18 @@
+import os
+import sys
+PATHBASE = os.path.abspath(os.path.join(os.path.dirname(__file__),'..'))
+sys.path.append(PATHBASE)
+
 from . import read
-from . import model
+from . import write
+import model
+
 
 from astropy.table import Table
 import datetime
 import logging
-import os
+import json
 
-PATHBASE = os.path.abspath(os.path.join(os.path.dirname(__file__),'..'))
 DATA = Table(names=('id','upload_time','filename','status','message'), 
              dtype=(str,datetime.datetime,str,str,str))
 UPLOAD_LIFETIME = datetime.timedelta(hours=24)
@@ -42,12 +48,30 @@ def analyse(id, params):
                 row['status']='ERROR'
                 row['message']=err.args[0]
                 break
+        with open(os.path.join(PATHBASE, 'uploads', id, 'timeseries.json'), 'w') as tfile :
+            json.dump({'status':'ERROR', 'message':err.args[0]}, tfile)
         return
     dts = read.timeformat(ts, params)
 
-    parsed = Table((ts,dts,fs),names=('ts','dts','fs'))
-    parsed.write(os.path.join(PATHBASE, 'uploads', id, 'timeseries.ecsv'), format='ascii')
+    parsed = {
+        'status':'OK',
+        'data': {'ts':list(map(int,map(float,ts))), 
+                 'dts':list(map(lambda t: str(t).split('.')[0],dts)), 
+                 'fs':list(map(float,fs))
+        }
+    }
+    with open(os.path.join(PATHBASE, 'uploads', id, 'timeseries.json'), 'w') as tfile :
+        json.dump(parsed, tfile)
 
-    # Call model here
-    # found_peaks = model.evaluate(ts, fs)
+    try :
+        # Call model here
+        found_peaks = model.evaluate(ts, fs)
+    except Exception as err :
+        logger.exception(f"Statistical model failed to run - {id}")
+        with open(os.path.join(PATHBASE, 'uploads', id, 'result.json'), 'w') as rfile :
+            json.dump({'status':'ERROR', 'message':err.args[0]}, rfile)
+        return
+
+    with open(os.path.join(PATHBASE, 'uploads', id, 'result.json'), 'w') as rfile :
+        json.dump({'status':'OK', 'message':'', 'data':found_peaks}, rfile)
     

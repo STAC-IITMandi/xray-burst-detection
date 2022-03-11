@@ -26,9 +26,7 @@
         overflow-y: hidden;
         width: 16em;
         border-right: 1px solid lightgray;
-    }
-    #sidebar .nav {
-        min-height: calc(100vh - 80px - 7.5rem);
+        min-height: calc(100vh - 80px - 6.25rem);
     }
 }
 

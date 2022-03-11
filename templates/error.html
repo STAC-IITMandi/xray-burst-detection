@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block head_additions %}
+    <meta http-equiv="refresh" content="2; url=/"/>
+{% endblock %}
+
+{% block content %}
+    <div style="margin: 200px 100px 100px;">
+        <h1 class="mx-auto text-center">
+            <span class="text-danger">{{ code }}</span>
+            <span class="text-dark">{{ error }}</span>
+        </h1>
+    </div>
+{% endblock %}
