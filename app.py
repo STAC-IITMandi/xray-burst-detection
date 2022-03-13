@@ -1,3 +1,16 @@
+"""
+Solar X-Ray Burst Identifier
+===============================
+Developed by the team at IIT Mandi
+Inter-IIT Tech meet 10.0 (March 2022) - ISRO's Mid Prep problem
+-------------------------------
+https://github.com/STAC-IITMandi/xray-burst-detection
+License & Authors : See the `LICENSE` file and Github repository
+"""
+
+"""
+This file is the entry point of the web server.
+"""
 
 from flask import Flask, render_template, request, redirect, send_file
 from dotenv import load_dotenv
@@ -24,14 +37,30 @@ logging.basicConfig(level=logging.INFO,
     format='%(name)-10s %(levelname)-8s [%(asctime)s] %(message)s',
 )
 
+# ***************************************
+# BEGIN server route definitions
+# ***************************************
+
+
 @app.route('/')
 def landing_page():
+    """Home page. User can upload files from here"""
     return render_template('landing.html')
 
 
 @app.route('/analysis', methods=['GET','POST'])
 def analysis_page():
+    """
+    Page where the visualisation is shown.
 
+    Uploaded files are POSTed to this url, then a UUID is generated for them and 
+    they are stored on the filesystem, then the `fileparsers` module takes over
+    processing of the data.
+
+    Meanwhile, the user is redirected to the page with the visualisation,
+    by GETting this url along with the uuid, which is used to uniquely identify
+    this upload in all places from now on.
+    """
     if request.method == 'POST':
 
         id = str(uuid.uuid1())
@@ -43,7 +72,7 @@ def analysis_page():
         
         logger.info(f"Created file {id}")
         fileparsers.DATA.add_row(
-            [id,datetime.datetime.now(),f.filename,'PROCESSING','']
+            [id,datetime.datetime.now(),f.filename,'PROCESSING','',False]
         )
         # t = threading.Thread(target=fileparsers.analyse,
         #                      args=(id, request.form))
@@ -62,15 +91,38 @@ def analysis_page():
             return render_template('error.html', code=400, error='Bad Request'), 400
 
 
+@app.route('/status/<id>')
+def status_check(id):
+    """Return JSON with info about whether the uploaded file has been parsed successfully."""
+    if os.path.isdir(os.path.join(PATHBASE, 'uploads', id)):
+        for row in fileparsers.DATA:
+            if row['id']==id :
+                stat, msg, err = row['status'], row['message'], bool(row['error_included'])
+                break
+        return {'status':stat, 'message':msg, 'error_included':err}
+    else :
+        return '', 404
+
+
 @app.route('/data/<s>/<id>')
 def data_server(s, id):
+    """
+    Return the parsed data files (stored on filesystem) for the timeseries,
+    and also its detected bursts / statistical model results, for an upload.
+
+    Timeseries is served only for graph plotting, in CSV format required by the library.
+    Result data is served in JSON (for the graph), and all other formats defined in
+    `fileparsers.write`, for the user to download.
+    """
     if os.path.isdir(os.path.join(PATHBASE, 'uploads', id)):
+
         if s == 'timeseries' :
-            fp = os.path.join(PATHBASE, 'uploads', id, 'timeseries.json')
+            fp = os.path.join(PATHBASE, 'uploads', id, 'timeseries.csv')
             if os.path.isfile(fp):
-                return send_file(fp, mimetype='application/json')
+                return send_file(fp, mimetype='text/csv')
             else :
-                return {'status':'UNAVAILABLE',}
+                return '', 404
+    
         elif s == 'result' :
             request_format = request.args.get('format','json')
             for fmt, mimetype in zip(('csv','xlsx','fits'),
@@ -94,8 +146,17 @@ def data_server(s, id):
         return '', 404
 
 
+# End of server route definitions
+
+
 
 def cleaner():
+    """
+    This function runs in a separate thread, with the sole purpose of removing
+    uploaded files & associated data whenever their storage duration has expired;
+    and their entry from the server database (`fileparsers.DATA`).
+    Any existing files present when the server starts are also cleaned.
+    """
     global app, PATHBASE
     logger = logging.getLogger('fileclean')
     logger.info('Cleaning up old files')

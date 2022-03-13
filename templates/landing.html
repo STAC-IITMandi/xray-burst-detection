@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="h-100 d-flex align-items-center position-relative px-4" id="uploadContainer">
-        <div class="mx-auto">
+        <div class="mx-auto py-5">
             <form method="POST" enctype="multipart/form-data" action="/analysis">
                 <label for="formFile" class="form-label h3 mt-4 mb-2">Select a data file to analyse</label>
                 <div class="my-3">
@@ -55,8 +55,12 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-md-4"><label for="fMeta_asciiDelim" class="col-form-label">ASCII table delimiter</label></div>
+                        <div class="col-md-4"><label for="fMeta_asciiDelim" class="col-form-label">ASCII table delimiter (optional) </label></div>
                         <div class="col-md-8"><input type="text" name="fMeta_asciiDelim" class="form-control-sm" value=""/></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4"><label for="fMeta_errSerName" class="col-form-label">Error Value Column Name (optional) </label></div>
+                        <div class="col-md-8"><input type="text" name="fMeta_errSerName" class="form-control-sm" value="ERROR"/></div>
                     </div>
                     <div class="row my-4">
                         <div class="col-4"><!--empty--></div>
