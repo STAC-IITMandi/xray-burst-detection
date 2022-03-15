@@ -26,7 +26,16 @@
         overflow-y: hidden;
         width: 16em;
         border-right: 1px solid lightgray;
-        min-height: calc(100vh - 80px - 6.25rem);
+        min-height: calc(100vh - 80px - 7.3rem);
+    }
+    /* No wrap only for top-level div because the Dygraph aggressively 
+    shifts its size/position for every pixel, breaking the layout */
+    #pagemainarea {
+        flex-wrap: nowrap !important;
+        /* max-width: calc(100vw - 16em);  */
+    }
+    #pagemainarea * {
+        flex-wrap: wrap;
     }
 }
 
@@ -54,4 +63,15 @@
 
 details .form-control-sm {
     border: 1px solid #ced4da;
+}
+
+.dygraph-ylabel {
+    margin: -1.5rem;
+}
+.dygraph-xlabel {
+    margin: 1rem;
+}
+
+tr.highlight {
+    background-color: rgb(215, 250, 255);
 }

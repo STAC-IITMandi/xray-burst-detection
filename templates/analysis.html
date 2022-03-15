@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 
 {% block head_additions %} 
+<!-- Dygraph CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css" 
+    integrity="sha384-T0vx1F0fMzb57U9DIPej4aJchYkkQt4rApqgqA0me1sjUIdjRcvM/iEgU/MbCaV5" crossorigin="anonymous"/>
+<!-- Dygraphs JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js" crossorigin="anonymous"
+    integrity="sha384-Siw62Hkn0S0jBTE5nHbjlPvg2soIqKgOnp4qUW49Pz5sOjEOue5d6NzCydyTsd2n" defer></script>
+<!-- Custom JS -->
 <script>
     const _uploadID = "{{ id }}";
-    var _queryURI = `/data/{{ id }}`;
-    console.info("Data Location : ", _queryURI);
+    console.info("Data Location : ", _uploadID);
 </script>
 <script type="application/javascript" src="/static/visualise.js" defer></script>
 {% endblock %}
@@ -20,7 +26,7 @@
             <dd class="col-sm-10 my-2">{{ id }}</dd>
         </dl>
     </div>
-    <div class="my-5 mx-auto">
+    <div class="my-5 mx-auto" id="mainDivLoading">
         <h3 class="my-2">Receiving processed data...</h3>
         <div class="d-flex justify-content-center">
             <div class="spinner-grow text-primary mx-1" style="animation-delay: 0.0s;" role="status">
@@ -29,7 +35,56 @@
                 <span class="visually-hidden">Loading...</span></div>
             <div class="spinner-grow text-primary mx-1" style="animation-delay: 0.2s;" role="status">
                 <span class="visually-hidden">Loading...</span></div>
-        </large>
+        </div>
+    </div>
+    <div class="my-5 mx-auto d-none" id="mainDivError">
+        <div class="alert alert-danger mx-5 my-5">
+            <h4 class="alert-heading mb-4">Error</h4>
+            <hr/>
+            <p>Oops, this data source could not be processed !</p>
+            <p>Possible Cause of failure : <code class="text-dark" id="errorReason">Unknown. Please check the server logs.</code></p>
+        </div>
+    </div>
+    <div class="my-5 d-none" id="mainDivGraph">
+        <div class="row">
+            <div class="col-sm-1"><!-- Empty --></div>
+            <div class="col-sm-10">
+                <div id="plotContainer" class="w-100"></div>
+            </div>
+            <div class="col-sm-1"><!-- Empty --></div>
+        </div>
+        <div class="py-4"></div>
+        <div class="row">
+            <div class="col-sm-1"><!-- Empty --></div>
+            <div class="col-sm-10">
+                <ul class="text-muted mb-2">
+                    <li>Drag the handles of the range slider below the graph to zoom in/out to specific regions.</li>
+                    <li>Use the textbox at the bottom left corner to smooth the data by plotting the rolled series of <i>n</i>-point windows.</li>
+                    <li>Detected burst regions have a highlighted background. The data of each peak is displayed in the table below.</li>
+                </ul>
+            </div>
+            <div class="col-sm-1"><!-- Empty --></div>
+        </div>
+        <div class="mt-5 d-flex justify-content-center">
+            <span class="mt-1 align-middle">Download Results : &nbsp; </span>
+            <div class="btn-group">
+                <a class="btn btn-outline-primary" href="/data/result/{{ id }}?format=json" download="{{ id }}.json">JSON</a>
+                <a class="btn btn-outline-primary" href="/data/result/{{ id }}?format=csv"  download="{{ id }}.csv">CSV</a>
+                <a class="btn btn-outline-primary" href="/data/result/{{ id }}?format=xlsx" download="{{ id }}.xlsx">XLSX</a>
+                <a class="btn btn-outline-primary" href="/data/result/{{ id }}?format=fits" download="{{ id }}.fits">FITS</a>
+            </div>
+        </div>
+        <div class="py-4"></div>
+        <div class="row">
+            <div class="col-sm-1"><!-- Empty --></div>
+            <div class="col-sm-10">
+                <table id="burstList" class="table table-responsive my-3 mx-3">
+                    <thead><tr></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="col-sm-1"><!-- Empty --></div>
+        </div>
     </div>
 </div>
 {% endblock %}

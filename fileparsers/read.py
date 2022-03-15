@@ -87,7 +87,9 @@ def text(file:str, params:dict) :
         return (ts_col, fl_col, err_col)
 
     except Exception as e :
-        logger.error(f'ASCII Parser for {file} error - '+' '.join(map(str,e.args)))
+         # limit because ascii module dumps entire file content into error messgae
+        ers = ' '.join(map(str,e.args))[:2000]
+        logger.error(f'ASCII Parser for {file} error - '+ers)
         raise OSError(error_msg)
 
 

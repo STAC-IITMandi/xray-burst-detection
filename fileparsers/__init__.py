@@ -27,13 +27,14 @@ import model
 
 
 from astropy.table import Table
+import numpy as np
 import datetime
 import logging
 import json
 
 UPLOAD_LIFETIME = datetime.timedelta(hours=24)
 DATA = Table(names=('id','upload_time','filename','status','message','error_included'), 
-             dtype=(str,datetime.datetime,str,str,str,bool))
+             dtype=(str,datetime.datetime,'object',str,'object',bool))
 """
 This table `DATA` serves as a storage for metadata of the status of all uploads presently
 on the server, used by this module & app.py to track the files.
@@ -102,6 +103,11 @@ def analyse(id, params):
     try :
         # Call model here
         found_peaks = model.evaluate(ts, fs)
+
+        for peak in found_peaks :
+            times = peak['start_time'], peak['end_time'], peak['max_time']
+            sdt, edt, mdt = map(str, read.timeformat(np.array(times), params))
+            peak['start_time'], peak['end_time'], peak['max_time'] = sdt, edt, mdt
     except Exception as err :
         logger.exception(f"Statistical model failed to run - {id}")
         with open(os.path.join(PATHBASE, 'uploads', id, 'result.json'), 'w') as rfile :
