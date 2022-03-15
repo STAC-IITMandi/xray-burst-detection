@@ -4,3 +4,6 @@ venv/
 .vscode/
 **/misc/
 **/__pycache__/
+bin/
+dist/
+build/
