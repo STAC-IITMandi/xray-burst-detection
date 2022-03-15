@@ -47,6 +47,11 @@ def landing_page():
     """Home page. User can upload files from here"""
     return render_template('landing.html')
 
+@app.route('/guide')
+def guide_page():
+    """User Guide. Info on working of the app"""
+    return render_template('guide.html')
+
 
 @app.route('/analysis', methods=['GET','POST'])
 def analysis_page():
@@ -74,10 +79,10 @@ def analysis_page():
         fileparsers.DATA.add_row(
             [id,datetime.datetime.now(),f.filename,'PROCESSING','',False]
         )
-        # t = threading.Thread(target=fileparsers.analyse,
-        #                      args=(id, request.form))
-        # t.start()
-        fileparsers.analyse(id, request.form)
+        t = threading.Thread(target=fileparsers.analyse,
+                             args=(id, request.form))
+        t.start()
+        # fileparsers.analyse(id, request.form)
 
         return redirect(f'/analysis?upload={id}', 303)
 
@@ -185,7 +190,13 @@ def cleaner():
 
 
 if __name__ == '__main__':
+    print("""___________________________________________________
+
+Server starting...
+Please visit http://localhost:5115/ in your browser
+___________________________________________________
+""")
     _debug = os.environ.get('DEBUG','').lower() == 'true'
     _cleanerprocess = threading.Thread(target=cleaner)
     _cleanerprocess.start()
-    app.run(host='0.0.0.0', port=5000, debug=_debug)
+    app.run(host='0.0.0.0', port=5115, debug=_debug)

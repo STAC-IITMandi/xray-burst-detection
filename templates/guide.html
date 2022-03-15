@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block titlename %}Guide | {% endblock titlename %}
+
+{% block head_additions %}
+    <style>
+        h2, h3, h4, .h2, .h3, .h4 {
+            text-align: center;
+            margin: 1.5em auto;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto my-5">
+        <h2 class="mx-3">User Guide</h2>
+        <hr/>
+        <section>
+            <h4>Browser compatibility</h4>
+            <p>
+                This web app is best viewed on desktop / tablet rather than mobile (although responsive, the graph may not be clearly visible). <br/>
+                Some features of the front-end may not work in Internet Explorer. Recent versions of all other browsers such as Chrome, Edge, Safari, Firefox etc are suitable.
+            </p>
+        </section>
+        <section>
+            <h4>Basic Usage</h4>
+            <ul>
+                <li>There are 2 main pages of the app - the home page where you can upload files, and the analysis page where the results are shown after you submit the upload form. </li>
+                <li>The app can accept input data in the form of a single file, either FITS, XLSX or ASCII. Details of the input format are explained below.</li>
+                <li>Note : Although a large number of different kinds of inputs are supported, formats other than FITS in the style present in ISRO's Pradan Data source have not been tested extensively with the app as of now.
+                    It is best to use the given calibrated <code>.lc</code> files from there for input.</li>
+                <li>Drag and drop a file containing data onto the form area on the home page, or use the file selector to browse. Then click 'Upload'</li>
+                <li>You will be redirected to an analysis page. Please wait a few seconds before the graph of the plotted lightcurve is drawn, and the identified bursts are listed.</li>
+                <li>If there was any error in understanding/processing the contents of the file or the statistical algorithm, you will instead see a red dialog box with a short description of what went wrong.</li>
+                <li>This result has an Upload ID generated for it - each upload's data stays on the server for a duration of exactly <strong>24 hours</strong>. In this time, you can revisit the page or download the results. 
+                    Afterwards, the files are deleted permanently from the server.</li>
+                <li>A Table below the graph lists the bursts identified. You can also hover over the annotations ([1], [2], etc) on the graph to highlight that row of the table.</li>
+                <li>There are links to download this data in various formats - JSON, CSV, XLSX, FITS. All the entries present in the table will be contained there, with some metadata as well.</li>
+            </ul>
+        </section>
+        <section>
+            <h4>Input and output formats</h4>
+            <p>
+                The key task for input is to extract 2 series of values - one of times of observations, and the other of corresponding flux/intensity of x-rays; which form the light curve. Both are real-valued floating point numbers. <ul><li>Time is expected to be a running count of number of milliseconds or larger timesteps since an epoch. </li><li>Flux is the magnitude of energy detected at the recorded wavelength, typically in a unit of the order of <var>eV</var>.</li></ul><br/>
+            </p><p>
+                ASCII files in multiple different formats such as CSV, TSV, fixed width, html or markdown tables, etc are supported. The powerful <a href="https://docs.astropy.org/en/stable/io/ascii/index.html" target="_blank">astropy.io.ascii</a> module is used to parse these files. <a href="https://docs.astropy.org/en/stable/io/fits/index.html" target="_blank">astropy.io.fits</a> is used for FITS and <a href="https://openpyxl.readthedocs.io/en/stable/" target="_blank">openpyxl</a> for Excel workbooks. In order to customise search methods for these different file types, there are a number of other options in the upload form. The usage of these additional options is explained below :
+            </p>
+            <h5 class="ml-5">FITS</h5>
+            <p>
+                Fits files are composed of a number of HDUs (blocks/sections). The script first looks for a block with the name given in <code>Table/sheet name</code>. If not found, the first unit that is a binary data table. Next, within the table, 2 columns named as in <code>Time Value column name</code> and <code>Flux Value column name</code>. 
+            </p>
+            <h5 class="ml-5">XLSX</h5>
+            <p>
+                By analogy to FITS, Excel workbooks (please note - the app accepts the newer XLS<b>X</b> format, not XLS) are composed of a number of worksheets. The script first looks for a sheet with the name given in <code>Table/sheet name</code>. If not found, the first worksheet in the file. Next, within the the sheet, 2 columns named as in <code>Time Value column name</code> and <code>Flux Value column name</code>. The headings (plain text) should be present in Row 1 of the sheet, and the values below them.
+            </p>
+            <h5 class="ml-5">ASCII Text</h5>
+            <p>
+                There are no blocks/sheets in such files. The app tries to parse the module using all the well-known formats recognisable, looking for columns named as in <code>Time Value column name</code> and <code>Flux Value column name</code>. For these files, the additional field <code>ASCII table delimiter</code> can be used, if specified, to parse CSV like data with custom separator strings.
+            </p>
+            <p>
+                For all input files, the interpretation of Time observations (magnitude of time step, <code>Running Time Unit</code>, and epoch, <code>Time Epoch (UTC)</code>) are as mentioned above. <br/>
+                Optionally, an <code>Error Value Column Name</code> may also be specified, which is for the column containing Observation errors in the Flux value (absolute error, Flux ± Error). This is <em>not used</em> in the statistical model, but will be plotted in the output graph if found (as a band on either side of the line).
+            </p><p><br/></p>
+            <h5 class="ml-5">Output</h5>
+            <p>4 output formats are currently created - JSON, CSV, XLSX, FITS. For each of the bursts, all the attributes visible in the table on the analysis page, including <code>start_time</code>, <code>end_time</code>, <code>max_time</code>, etc are present. Additionally, some metadata (Original filename, Upload datetime, this Software's name & URL) are also included if possible.
+                <ul>
+                    <li>The JSON has a top-level <i>object</i>, containing a key <code>BURSTS</code>, which is an array of data of each of the bursts detected. Each burst is an object with key-value pairs corresponding to the attributes as described above. Metadata is stored in another object at the top level.</li> 
+                    <li>CSV is a plain text table of all the attributes as columns, and values for each burst row by row. Metadata is not stored.</li>
+                    <li>XLSX has a worksheet named <code>BURSTS</code>, in which all the attributes are present similar to the csv format. Metadata is in a separate worksheet.</li>
+                    <li>FITS has a binary table HDU named <code>BURSTS</code>, in which the attributes are present as columns. Metadata is stored in the primary header.</li>
+                </ul>
+            </p>
+        </section>
+
+    </div>
+    {% endblock %}
