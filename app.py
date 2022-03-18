@@ -1,10 +1,9 @@
 """
 Solar X-Ray Burst Identifier
 ===============================
-Developed by the team at IIT Mandi
 Inter-IIT Tech meet 10.0 (March 2022) - ISRO's Mid Prep problem
 -------------------------------
-https://github.com/STAC-IITMandi/xray-burst-detection
+hhttps://github.com/InterIIT2022-ISRO-T3/MP_ISRO_T3
 License & Authors : See the `LICENSE` file and Github repository
 """
 
@@ -199,4 +198,4 @@ ___________________________________________________
     _debug = os.environ.get('DEBUG','').lower() == 'true'
     _cleanerprocess = threading.Thread(target=cleaner)
     _cleanerprocess.start()
-    app.run(host='0.0.0.0', port=5115, debug=_debug)
+    app.run(host='127.0.0.1', port=5115, debug=_debug)

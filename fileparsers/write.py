@@ -23,7 +23,7 @@ def fits(jsondata, fp, filename='', filedate=''):
     u0.header['filename'] = filename
     u0.header['uplodate'] = str(filedate)
     u0.header['software'] = 'X-Ray burst detector'
-    u0.header['softwURL'] = 'https://github.com/STAC-IITMandi/xray-burst-detection'
+    u0.header['softwURL'] = 'https://github.com/InterIIT2022-ISRO-T3/MP_ISRO_T3'
     hdul = FITSio.HDUList([u0,u1])
     hdul.writeto(fp, overwrite=True)
 
@@ -33,17 +33,18 @@ def excel(jsondata, fp, filename='', filedate=''):
     s1 = wb.active
     s1.title = "BURSTS"
     cols = {}
-    for i, colname in enumerate(jsondata[0], start=1):
-        s1.cell(row=1, column=i, value=colname)
-        cols[colname] = i
-    for j, record in enumerate(jsondata, start=2) :
-        for colname, val in record.items():
-            s1.cell(row=j, column=cols[colname], value=val)
+    if jsondata :
+        for i, colname in enumerate(jsondata[0], start=1):
+            s1.cell(row=1, column=i, value=colname)
+            cols[colname] = i
+        for j, record in enumerate(jsondata, start=2) :
+            for colname, val in record.items():
+                s1.cell(row=j, column=cols[colname], value=val)
     s0 = wb.create_sheet('Metadata')
     s0['A1'], s0['B1']= 'filename', filename
     s0['A2'], s0['B2']= 'upload_date', str(filedate)
     s0['A3'], s0['B3']= 'software', 'X-Ray burst detector'
-    s0['A4'], s0['B4']= 'software_URL', 'https://github.com/STAC-IITMandi/xray-burst-detection'
+    s0['A4'], s0['B4']= 'software_URL', 'https://github.com/InterIIT2022-ISRO-T3/MP_ISRO_T3'
     wb.save(fp)
 
 
@@ -52,7 +53,7 @@ def text(jsondata, fp, filename='', filedate=''):
     t.meta['filename'] = filename
     t.meta['upload_date'] = str(filedate)
     t.meta['software'] = 'X-Ray burst detector'
-    t.meta['software_URL'] = 'https://github.com/STAC-IITMandi/xray-burst-detection'
+    t.meta['software_URL'] = 'https://github.com/InterIIT2022-ISRO-T3/MP_ISRO_T3'
     t.write(fp, format='ascii.csv', overwrite=True)
 
 

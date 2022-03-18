@@ -5,3 +5,7 @@ python-dotenv
 # For parsers
 astropy
 openpyxl
+
+# For Statistical/ML model
+sklearn
+scipy

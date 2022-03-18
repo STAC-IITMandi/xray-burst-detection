@@ -128,7 +128,7 @@ def analyse(id, params):
                         'filename': fname,
                         'upload_date': fdate,
                         'software': 'X-Ray burst detector',
-                        'software_URL': 'https://github.com/STAC-IITMandi/xray-burst-detection',
+                        'software_URL': 'https://github.com/InterIIT2022-ISRO-T3/MP_ISRO_T3',
                   },
                   'BURSTS':found_peaks}, rfile)
     logger.info(f"Wrote JSON result - {id}")
